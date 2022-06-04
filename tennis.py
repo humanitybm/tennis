@@ -63,6 +63,14 @@ racket_right = Player('racket.png', 4, 620, 200, 50, 150)
 
 ball = GameSprite('tenis_ball.png', 4, 200, 200, 50, 50)
 
+ball_speed_x = 3
+ball_speed_y = 3
+
+font.init()
+font1 = font.Font(None, 35 )
+lose1 = font1.render('lose.', 0, (180,0,0))
+lose2 = font1.render('lose,', 0, (180,0,0))
+
 FPS = 50
 clock = time.Clock()
 run = True
@@ -79,6 +87,22 @@ while run:
         racket_left.update_left()
         racket_right.update_right()
     
+        ball.rect.x += ball_speed_x
+        ball.rect.y += ball_speed_y
+
+        if ball.rect.y > win_height - 50 or ball.rect.y < 0:
+            ball_speed_y *= -1
+
+        if sprite.collide_rect(racket_left, ball) or sprite.collide_rect(racket_right,ball):
+            ball_speed_x *= -1
+
+        if ball.rect.x < 0:
+            finish = True
+            window.blit(lose1, (200,200))
+
+        if ball.rect.x > win_width - 50:
+            finish = True
+            window.blit(lose2, (200,200))
 
         ball.reset()
         racket_left.reset()
